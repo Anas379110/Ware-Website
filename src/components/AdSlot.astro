@@ -1,0 +1,23 @@
+---
+// مكوّن إعلان موحّد — يُدرَج بمواضع محدَّدة فقط (لا يحجب المحتوى الأساسي).
+// السكربتات الفعلية (client ID الحقيقي) تُضبط عبر متغيرات البيئة عند النشر الفعلي —
+// هذا Placeholder بصري بمرحلة التطوير حتى لا تُرسَل طلبات لشبكات إعلانية بدون حسابات فعلية مُفعَّلة.
+export interface Props {
+  position: 'header' | 'in-article' | 'footer';
+}
+const { position } = Astro.props;
+---
+<div
+  class="ad-slot my-4 flex items-center justify-center bg-neutral-100 border border-dashed border-neutral-300 rounded text-xs text-neutral-400 py-6"
+  data-ad-position={position}
+  aria-label="مساحة إعلانية"
+>
+  مساحة إعلانية ({position})
+</div>
+
+<!--
+  عند النشر الفعلي: استبدل هذا الـPlaceholder بسكربت الشبكة الفعلي، مثال AdSense:
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX" crossorigin="anonymous"></script>
+  إلزامي: async دائمًا (ads-policy-review skill) لمنع تعطيل Lighthouse.
+  إلزامي: لا يُضاف بموقعي دار القرآن/دار السنة إلا بمسافة بصرية واضحة عن النص الديني (لا In-article ملاصق مباشرة).
+-->

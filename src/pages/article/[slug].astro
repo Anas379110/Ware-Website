@@ -1,0 +1,60 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FinancialDisclaimer from '../../components/FinancialDisclaimer.astro';
+import { isPublished, hasStaleFinancialData } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', isPublished);
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+const { article } = Astro.props;
+const { Content } = await article.render();
+const stale = hasStaleFinancialData(article);
+---
+<BaseLayout title={article.data.title} description={article.data.excerpt}>
+  <article>
+    <span class="text-xs text-brand font-medium">{article.data.country.replace('_', ' ')} · {article.data.type.replace(/_/g, ' ')}</span>
+    <h1 class="text-3xl font-bold mt-2 mb-2">{article.data.title}</h1>
+    <time class="text-sm text-neutral-500 block mb-6">
+      {new Intl.DateTimeFormat('ar', { dateStyle: 'long' }).format(article.data.publishDate)}
+    </time>
+
+    {stale && (
+      <div class="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded p-3 mb-4">
+        ⚠️ بعض الأرقام بهذا المقال قد تكون قديمة — تحقق من المصدر الأصلي للحصول على آخر تحديث.
+      </div>
+    )}
+
+    <div class="prose prose-neutral max-w-none">
+      <Content />
+    </div>
+
+    {article.data.financialFigures && article.data.financialFigures.length > 0 && (
+      <div class="mt-6 text-sm">
+        <strong>الأرقام المالية المذكورة:</strong>
+        <ul class="list-disc list-inside">
+          {article.data.financialFigures.map((f) => (
+            <li>{f.value} — {f.source} (كما بتاريخ {new Intl.DateTimeFormat('ar').format(f.asOfDate)})</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <div class="mt-4 pt-4 border-t border-neutral-200 text-sm text-neutral-600">
+      <strong>المصادر:</strong>
+      <ul class="list-disc list-inside">
+        {article.data.sources.map((s) => <li>{s}</li>)}
+      </ul>
+    </div>
+
+    <FinancialDisclaimer />
+  </article>
+</BaseLayout>

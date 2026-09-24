@@ -1,0 +1,23 @@
+{
+  "name": "ware",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "lint": "eslint . --ext .ts,.astro"
+  },
+  "dependencies": {
+    "astro": "^4.15.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "tailwindcss": "^3.4.10"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "eslint": "^9.9.0"
+  }
+}

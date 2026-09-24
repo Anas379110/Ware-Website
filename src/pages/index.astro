@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { isPublished, sortByDateDesc } from '../lib/content';
+
+const allArticles = await getCollection('articles', isPublished);
+const latest = sortByDateDesc(allArticles).slice(0, 10);
+---
+<BaseLayout title="الرئيسية">
+  <h1 class="text-2xl font-bold mb-6">أخبار وتحليلات اقتصاد الخليج</h1>
+  {latest.length === 0 ? (
+    <p class="text-neutral-500">لا توجد مقالات منشورة بعد.</p>
+  ) : (
+    <div class="grid gap-4 md:grid-cols-2">
+      {latest.map((entry) => <ArticleCard entry={entry} />)}
+    </div>
+  )}
+</BaseLayout>

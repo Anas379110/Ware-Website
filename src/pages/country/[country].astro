@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { isPublished, sortByDateDesc, filterByCountry } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const countries = ['السعودية', 'الإمارات', 'قطر', 'الكويت'];
+  return countries.map((country) => ({ params: { country } }));
+}
+
+const { country } = Astro.params;
+const allArticles = await getCollection('articles', isPublished);
+const filtered = sortByDateDesc(filterByCountry(allArticles, country ?? ''));
+---
+<BaseLayout title={`اقتصاد ${country}`}>
+  <h1 class="text-2xl font-bold mb-6">اقتصاد {country}</h1>
+  {filtered.length === 0 ? (
+    <p class="text-neutral-500">لا توجد مقالات لهذه الدولة بعد.</p>
+  ) : (
+    <div class="grid gap-4 md:grid-cols-2">
+      {filtered.map((entry) => <ArticleCard entry={entry} />)}
+    </div>
+  )}
+</BaseLayout>
