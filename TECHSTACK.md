@@ -1,4 +1,5 @@
-# 🛠️ التقنيات المستخدمة — Ware — موقع اقتصاد وأعمال الخليج العربي
+# 🛠️ Technologies Used — Ware — Gulf Economy & Business News Site
+
 - HTML/CSS/JS
 - Cloudflare Pages
 - SSL/HTTPS

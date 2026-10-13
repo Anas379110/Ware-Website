@@ -1,20 +1,19 @@
-# Ware — موقع اقتصاد وأعمال الخليج العربي
-**Ware — Gulf Economy & Business News Site** · التصنيف: موقع محتوى
-> ملف تعريفي بالمشروع ونطاقه؛ هذا المستودع يحتوي على التوثيق فقط ولا يتضمن الشفرة المصدرية.
+# Ware — Gulf Economy & Business News Site
+**Ware — Gulf Economy & Business News Site** · Category: Content site
 > Project overview and scope; this repository contains documentation only, not implementation source code.
 
-## نبذة عن المشروع
-موقع اقتصادي وأعمال للخليج العربي يغطي الأسواق وأدلة الاستثمار والعقارات ومقارنة تكاليف المعيشة وأخبار الشركات الناشئة.
+## Project Summary
+A Gulf economy and business site covering markets, investment and real estate guides, cost-of-living comparisons, and startup news.
 
-## أبرز النقاط
-- أخبار اقتصاد السعودية والإمارات وقطر والكويت وتحليلات سوق الأسهم (تداول، دبي المالي، بورصة قطر)
-- أدلة استثمار وعقارات ومقارنة تكاليف معيشة بين المدن
-- محتوى أصلي يومي، استضافة Cloudflare، متوافق مع سياسات الإعلانات
+## Highlights
+- News on the economies of Saudi Arabia, the UAE, Qatar, and Kuwait, and stock market analysis (Tadawul, Dubai Financial Market, Qatar Stock Exchange)
+- Investment and real estate guides, and cost-of-living comparisons between cities
+- Daily original content, hosted on Cloudflare, compliant with ad policies
 
-## الدور
-تطوير موقع محتوى للأعمال والاقتصاد الخليجي مع صفحات الأدلة والمقالات وتجربة تصفح متجاوبة.
+## Role
+Develop a content site for Gulf business and economy topics with guide pages, articles, and a responsive browsing experience.
 
-## التقنيات المستخدمة
+## Technologies
 HTML/CSS/JS, Cloudflare Pages, SSL/HTTPS, SEO, AdSense
 
-التفاصيل في [TECHSTACK.md](./TECHSTACK.md).
+Details in [TECHSTACK.md](./TECHSTACK.md).
