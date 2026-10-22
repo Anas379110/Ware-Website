@@ -6,6 +6,7 @@ export interface Props {
   description?: string;
 }
 const { title, description = "Ware — اقتصاد وأعمال الخليج العربي" } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 ---
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -13,6 +14,12 @@ const { title, description = "Ware — اقتصاد وأعمال الخليج ا
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} | Ware`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
