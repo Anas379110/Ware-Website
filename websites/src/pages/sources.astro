@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import item from '../lib/reader-review.json';
+---
+<BaseLayout title="المصادر والحقوق"><section class="section-heading"><div><span class="eyebrow">شفافية القراءة</span><h1>المصادر والحقوق</h1></div></section><div class="source-registry"><article><span class="eyebrow">مصدر واحد للمراجعة المحلية</span><h2>Global Voices الأصوات العالمية</h2><p>يسمح الناشر بتضمين RSS وإعادة الاستخدام مع نسب المحتوى والمؤلف وإظهار الترخيص والتعديلات</p><dl><dt>المادة المستخدمة</dt><dd>بطاقة أرشيفية بعنوان ومقدمة فقط</dd><dt>الصور</dt><dd>غير مستخدمة لأن حقوقها تفحص بصورة مستقلة</dd><dt>التغذية الآلية</dt><dd>غير مفعلة</dd><dt>ملاءمة التغطية</dt><dd>لا يكفي هذا المصدر وحده لخدمة أخبار اقتصاد الخليج اليومية</dd></dl><a href={item.licenseUrl}>سياسة إعادة النشر</a><a href="https://globalvoices.org/feeds/">سياسة تضمين التغذية</a></article><aside><h2>ضوابط القارئ</h2><p>تاريخ النشر الأصلي لا يتغير عند إعادة العرض</p><p>تاريخ الترجمة منفصل عن تاريخ التقرير</p><p>لا نعرض مادة قديمة على أنها خبر اليوم</p><p>تعطل المصدر أو غياب أخبار جديدة لا ينتج عنه عنوان آلي جديد</p></aside></div></BaseLayout>
