@@ -1,10 +1,20 @@
 import type { CollectionEntry } from 'astro:content';
 
-// مؤكَّد من المستخدم: يوم واحد فقط — أرقام سوق الأسهم تتقادم يوميًا
+// Existing one-day legacy threshold retained for compatibility
+// Demo samples contain no financial figures
 const FINANCIAL_STALE_AFTER_DAYS = 1;
 
+const isNonBlank = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+const isValidDate = (value: unknown): value is Date => value instanceof Date && Number.isFinite(value.valueOf());
+
 export function isPublished(entry: CollectionEntry<'articles'>): boolean {
-  return entry.data.reviewedBy.trim() !== '';
+  const { reviewedBy, publishDate, sources, financialFigures = [] } = entry.data;
+  return isNonBlank(reviewedBy)
+    && isValidDate(publishDate)
+    && publishDate.valueOf() <= Date.now()
+    && Array.isArray(sources) && sources.length > 0 && sources.every(isNonBlank)
+    && Array.isArray(financialFigures) && financialFigures.every((figure) =>
+      isNonBlank(figure.value) && isNonBlank(figure.source) && isValidDate(figure.asOfDate));
 }
 
 export function sortByDateDesc(entries: CollectionEntry<'articles'>[]): CollectionEntry<'articles'>[] {

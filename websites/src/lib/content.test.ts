@@ -5,7 +5,7 @@ import type { CollectionEntry } from 'astro:content';
 function makeEntry(overrides: Partial<CollectionEntry<'articles'>['data']> & { slug?: string }) {
   const { slug = 'test-slug', ...data } = overrides;
   return {
-    slug,
+    id: slug,
     data: {
       title: 'تحليل تجريبي',
       publishDate: new Date('2026-01-01'),
@@ -69,6 +69,6 @@ describe('isPublished/sortByDateDesc', () => {
   it('يرتب الأحدث أولًا', () => {
     const old = makeEntry({ slug: 'old', publishDate: new Date('2025-01-01') });
     const recent = makeEntry({ slug: 'recent', publishDate: new Date('2026-06-01') });
-    expect(sortByDateDesc([old, recent])[0].slug).toBe('recent');
+    expect(sortByDateDesc([old, recent])[0].id).toBe('recent');
   });
 });

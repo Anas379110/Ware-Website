@@ -1,4 +1,2 @@
 User-agent: *
-Allow: /
-
-Sitemap: https://ware.anasnet.com/sitemap.xml
+Disallow: /

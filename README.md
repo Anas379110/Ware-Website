@@ -1,19 +1,44 @@
-# Ware — Gulf Economy & Business News Site
-**Ware — Gulf Economy & Business News Site** · Category: Content site
-> Project overview and scope; this repository contains documentation only, not implementation source code.
+# Ware Gulf editorial interface demo
 
-## Project Summary
-A Gulf economy and business site covering markets, investment and real estate guides, cost-of-living comparisons, and startup news.
+Arabic RTL static interface built with Astro and self-hosted Noto Arabic fonts
 
-## Highlights
-- News on the economies of Saudi Arabia, the UAE, Qatar, and Kuwait, and stock market analysis (Tadawul, Dubai Financial Market, Qatar Stock Exchange)
-- Investment and real estate guides, and cost-of-living comparisons between cities
-- Daily original content, hosted on Cloudflare, compliant with ad policies
+This is a synthetic design demo and not a financial news service
+The three example articles are original synthetic content clearly labeled on cards and article pages
+No real financial figures market feeds ads accounts forms or analytics are enabled
+Search indexing is disabled
 
-## Role
-Develop a content site for Gulf business and economy topics with guide pages, articles, and a responsive browsing experience.
+## Local development
 
-## Technologies
-HTML/CSS/JS, Cloudflare Pages, SSL/HTTPS, SEO, AdSense
+Node 22.23.4 or later is required
 
-Details in [TECHSTACK.md](./TECHSTACK.md).
+```sh
+cd websites
+npm ci
+npm test
+npm run lint
+npx astro check
+npm run build
+npm run dev
+```
+
+## Free manual static hosting
+
+Render static site with public Git source
+Root directory websites
+Build command npm ci && npm run build
+Publish directory dist
+Manual deployment only
+No database or paid domain is required
+Do not enable paid capacity or add billing details
+
+## Content
+
+Example articles are in websites/src/content/articles
+Synthetic examples use syntheticDemo true
+Each sample explains its artificial nature and contains no real event or financial recommendation
+Original project planning documents remain as historical context and do not describe an operating newsroom
+
+## Fonts
+
+Self hosted Noto Arabic subsets are included under the SIL Open Font License
+See websites/public/fonts/OFL.txt

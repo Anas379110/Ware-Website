@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwind from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
-  site: 'https://ware.anasnet.com',
-  integrations: [tailwind()],
   output: 'static',
+  vite: { css: { postcss: { plugins: [tailwind(), autoprefixer()] } } },
 });
