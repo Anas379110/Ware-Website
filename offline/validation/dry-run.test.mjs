@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+import {preflight} from './preflight.mjs';
+const fixture=()=>({now:'2026-11-23T10:00:00Z',source:{id:'source-a',permission:'granted',evidenceRef:'test-only',allowedOrigins:['https://example.invalid'],allowedFields:['headline']},editorial:{approved:true,approvalRef:'test-only',maxAgeHours:24},item:{sourceId:'source-a',sourceItemId:'record-a',sourceUrl:'https://example.invalid/item',attribution:'test-only',originalPublishedAt:'2026-11-23T09:00:00Z',fields:['headline']}});
+const run=input=>spawnSync(process.execPath,['dry-run.mjs'],{input,encoding:'utf8',cwd:import.meta.dirname,maxBuffer:2*1024*1024});
+const parsed=input=>{const r=run(JSON.stringify(input));assert.equal(r.status,0,r.stderr);assert.equal(r.stderr,'');return JSON.parse(r.stdout)};
+const error=(input,code)=>{const r=run(input);assert.equal(r.status,2);assert.equal(r.stderr,'');const x=JSON.parse(r.stdout);assert.deepEqual(x,{dryRun:true,error:code});};
+test('one eligible record is evaluated without publishing',()=>{const x=parsed({items:[fixture()]});assert.equal(x.dryRun,true);assert.deepEqual(x.counts,{total:1,eligible:1,denied:0});assert.deepEqual(x.results,[{index:0,...preflight(fixture())}]);assert.equal(x.published,undefined)});
+test('mixed invalid item does not stop valid siblings',()=>{const x=parsed({items:[fixture(),null,fixture()]});assert.deepEqual(x.counts,{total:3,eligible:2,denied:1});assert.deepEqual(x.results.map(r=>r.index),[0,1,2]);assert.deepEqual(x.results[1].reasons,['INVALID_INPUT'])});
+test('empty batch allowed as an explicit no-op',()=>assert.deepEqual(parsed({items:[]}).counts,{total:0,eligible:0,denied:0}));
+test('one hundred records fit engineering cap',()=>assert.equal(parsed({items:Array.from({length:100},fixture)}).counts.total,100));
+test('over count cap returns no partial result',()=>error(JSON.stringify({items:Array.from({length:101},fixture)}),'BATCH_TOO_LARGE'));
+test('malformed JSON yields concise machine error',()=>error('{broken','INVALID_JSON'));
+test('empty stdin denied',()=>error('','INVALID_JSON'));
+for(const x of [null,[],{}, {items:{}}, {items:[],extra:true}]) test(`invalid container ${JSON.stringify(x)}`,()=>error(JSON.stringify(x),'INVALID_BATCH'));
+test('limit counts UTF8 bytes not code units',()=>error(JSON.stringify({items:[],padding:'ع'.repeat(524288)}),'INPUT_TOO_LARGE'));
+test('exact byte cap parses without trimming into overrun',()=>{const s=JSON.stringify({items:[]});assert.equal(parsedRaw(s+' '.repeat(1048576-Buffer.byteLength(s))).counts.total,0)});
+function parsedRaw(s){const r=run(s);assert.equal(r.status,0,r.stdout);return JSON.parse(r.stdout)}
+test('one byte over input cap denies before schema validation',()=>error(' '.repeat(1048577),'INPUT_TOO_LARGE'));
+test('chunked large stdin still yields one JSON result',()=>{const s=JSON.stringify({items:[fixture()]});assert.equal(parsedRaw(' '.repeat(100000)+s).counts.eligible,1)});
+test('duplicate snapshot is used without mutation',()=>{const x=fixture();x.publishedKeys=[preflight(x).key];assert.ok(parsed({items:[x]}).results[0].reasons.includes('ALREADY_PUBLISHED'))});
+test('translation does not replace original date in report',()=>{const x=fixture();x.item.originalPublishedAt='2024-06-06T09:00:00Z';x.item.translatedAt=x.now;const y=parsed({items:[x]}).results[0];assert.equal(y.originalPublishedAt,x.item.originalPublishedAt);assert.ok(y.reasons.includes('ARCHIVE_REQUIRES_REVIEW'))});
+test('input evidence and attribution are not echoed',()=>{const x=fixture();x.source.evidenceRef='PRIVATE_EVIDENCE_MARKER';x.item.attribution='PRIVATE_ATTRIBUTION_MARKER';const r=run(JSON.stringify({items:[x]}));assert.equal(r.status,0);assert.ok(!r.stdout.includes('PRIVATE_'))});
+test('invalid UTF8 rejected rather than silently replaced',()=>{const r=run(Buffer.from([0x7b,0x22,0x78,0x22,0x3a,0x22,0xff,0x22,0x7d]));assert.equal(r.status,2);assert.deepEqual(JSON.parse(r.stdout),{dryRun:true,error:'INVALID_JSON'})});
+test('dry run does not claim within-batch reservations',()=>{const x=parsed({items:[fixture(),fixture()]});assert.equal(x.counts.eligible,2);assert.equal(x.published,undefined)});
